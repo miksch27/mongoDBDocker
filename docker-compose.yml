@@ -1,0 +1,36 @@
+# starts mongo and mongo-express 
+# uses a persistence volume 
+# user/password have to be change, anyhow there are better solutions
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ro1
+      MONGO_INITDB_ROOT_PASSWORD: e0991mple
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_container:/data/db
+    networks:
+      - front-tier
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ro1
+      ME_CONFIG_MONGODB_ADMINPASSWORD: e0991mple
+      ME_CONFIG_MONGODB_URL: mongodb://ro1:e0991mple@mongo:27017/
+    networks:
+      - front-tier
+volumes:
+  mongo_container:
+    name: MongoDBData
+networks:
+  # The presence of these objects is sufficient to define them
+  front-tier:
+    name: Netzwerk
